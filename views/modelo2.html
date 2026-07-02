@@ -1,0 +1,61 @@
+<!-- Tabs de Navegação -->
+<div class="tabs-container">
+  <button class="tab-btn active" id="tab-alteracoes" data-tab="alteracoes">
+    Alterações sugeridas <span class="tab-badge warning" id="badge-alteracoes">239</span>
+  </button>
+  <button class="tab-btn" id="tab-novas" data-tab="novas">
+    Novas entradas <span class="tab-badge success" id="badge-novas">1.505</span>
+  </button>
+  <button class="tab-btn" id="tab-exclusoes" data-tab="exclusoes">
+    Possíveis exclusões <span class="tab-badge danger" id="badge-exclusoes">53</span>
+  </button>
+</div>
+
+<!-- Barra de Filtros -->
+<div class="filters-strip">
+  <select class="filter-select" id="filter-cultura">
+    <option value="Todas">Todas as culturas</option>
+    <option value="Algodão">Algodão</option>
+    <option value="Soja">Soja</option>
+    <option value="Milho">Milho</option>
+    <option value="Cana-de-açúcar">Cana-de-açúcar</option>
+  </select>
+  
+  <select class="filter-select" id="filter-classificacao">
+    <option value="Todas">Todas as classificações</option>
+    <option value="obrigatoria">Alteração obrigatória</option>
+    <option value="revisao">Revisão humana necessária</option>
+  </select>
+
+  <input type="text" class="filter-input" id="filter-search" placeholder="Buscar por praga...">
+</div>
+
+<!-- Container Flex: Tabela à esquerda, Gaveta à direita -->
+<div class="modelo2-view">
+  <!-- Lado Esquerdo: Tabela -->
+  <div class="table-side">
+    <div class="table-summary-info" id="count-info">
+      Mostrando 0 de 0 relações com alterações sugeridas
+    </div>
+    
+    <table class="densa-table" id="densa-table">
+      <thead id="table-head">
+        <!-- O cabeçalho será injetado dinamicamente com base na aba ativa -->
+      </thead>
+      <tbody id="table-body">
+        <!-- As linhas da tabela serão injetadas dinamicamente -->
+      </tbody>
+    </table>
+  </div>
+  
+  <!-- Lado Direito: Gaveta de Detalhes -->
+  <div class="drawer-side" id="detail-drawer">
+    <!-- O estado vazio ou detalhado do item será renderizado aqui -->
+    <div class="drawer-empty-state">
+      <svg viewBox="0 0 24 24">
+        <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+      </svg>
+      <div>Clique em uma linha à esquerda para ver o comparativo completo entre o valor atual e o sugerido pela IA.</div>
+    </div>
+  </div>
+</div>

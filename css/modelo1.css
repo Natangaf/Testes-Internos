@@ -1,0 +1,230 @@
+/* Modelo 1 Specific Styling (Cards View) */
+
+.modelo1-view {
+  background-color: var(--bg-surface-alt);
+  padding: 22px 36px;
+}
+
+.view-header-summary {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+}
+
+/* Card layout */
+.card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.card-item {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 20px 24px;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card-item:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 18px;
+}
+
+.card-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.card-subtitle {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 3px;
+}
+
+.card-header-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.card-fields-count {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-right: 8px;
+}
+
+/* Diff Fields */
+.diff-fields-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.field-diff-row {
+  margin-bottom: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px dashed var(--border-color);
+}
+
+.field-diff-row:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.field-diff-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.field-label {
+  font-size: 12px;
+  color: var(--text-light);
+  font-weight: 700;
+}
+
+.diff-blocks {
+  display: flex;
+  gap: 12px;
+  align-items: stretch;
+}
+
+.diff-block {
+  flex: 1;
+  background: #F4F6F5;
+  border-radius: 8px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.diff-block-title {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-weight: 700;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: .02em;
+}
+
+.diff-block-val {
+  font-size: 13px;
+  color: var(--text-light);
+  line-height: 1.4;
+}
+
+.diff-arrow {
+  align-self: center;
+  color: var(--text-muted);
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.diff-block.ia-note {
+  background: var(--warning-light);
+}
+
+.diff-block.ia-note .diff-block-title {
+  color: var(--warning-color);
+}
+
+.diff-block.ia-note .diff-block-val {
+  color: #8A5A2E;
+}
+
+.diff-block.suggested {
+  background: var(--accent-light);
+}
+
+.diff-block.suggested .diff-block-title {
+  color: var(--primary-color);
+}
+
+.diff-block.suggested .diff-block-val {
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.field-diff-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  justify-content: center;
+}
+
+/* View de Novas Entradas */
+.new-entry-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 14px;
+}
+
+.new-entry-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  background: var(--bg-surface-alt);
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+}
+
+.new-entry-info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.new-entry-info-label {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .02em;
+}
+
+.new-entry-info-val {
+  font-size: 13px;
+  color: var(--text-primary);
+}
+
+/* View de Exclusões */
+.exclusion-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.exclusion-justification {
+  font-size: 13px;
+  color: var(--text-light);
+  margin-top: 10px;
+  line-height: 1.4;
+}
+
+.exclusion-source {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.exclusion-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
