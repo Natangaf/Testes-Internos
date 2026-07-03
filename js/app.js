@@ -1,4 +1,4 @@
-import { ALTERACOES, NOVAS, EXCLUSOES } from './data.js';
+import { ALTERACOES, NOVAS, EXCLUSOES, VERSAO_ANTERIOR } from './data.js';
 import { Router } from './router.js';
 
 // Estado global da aplicação
@@ -13,7 +13,12 @@ const state = {
   // Armazena as decisões do usuário: 'accepted' ou 'rejected'
   // Chaves: 'itemId:fieldIdx' para alterações, ou 'itemId' para novas/exclusões
   decisions: {},
-  openRowId: null
+  openRowId: null,
+  // Estado da aba de Rollback
+  rollback: {
+    confirmado: false,
+    selectedFields: {}
+  }
 };
 
 // Instancia o roteador
@@ -78,6 +83,12 @@ function inicializarListenersView() {
       const filterClassificacao = document.getElementById('filter-classificacao');
       if (filterClassificacao) {
         filterClassificacao.style.display = state.activeTab === 'alteracoes' ? 'block' : 'none';
+      }
+
+      // Barra de filtros sempre visível (rollback também usa)
+      const filtersBar = document.getElementById('filters-bar');
+      if (filtersBar) {
+        filtersBar.style.display = 'flex';
       }
       
       render();
@@ -150,19 +161,37 @@ function filtrarDados() {
 
 // Função de renderização reativa
 function render() {
+  // Mostra/esconde views conforme aba
+  const cardsView = document.getElementById('cards-view');
+  const tableView = document.getElementById('table-view');
+  const rollbackView = document.getElementById('rollback-view');
+  const isRollback = state.activeTab === 'rollback';
+
+  // Rollback usa mesmos containers (cards-view / table-view), esconde rollback-view separada
+  if (rollbackView) rollbackView.style.display = 'none';
+
+  // Garante visibilidade dos containers do modelo ativo
+  if (cardsView) cardsView.style.display = '';
+  if (tableView) tableView.style.display = '';
+
+  if (isRollback) {
+    renderRollback();
+    return;
+  }
+
   const dadosFiltrados = filtrarDados();
-  
+
   // Atualiza contadores nas abas (badges)
   atualizarBadgesAbas();
-  
+
   // Atualiza o texto descritivo de contagem
-  const labelTab = state.activeTab === 'alteracoes' ? 'alterações sugeridas' : 
+  const labelTab = state.activeTab === 'alteracoes' ? 'alterações sugeridas' :
                    state.activeTab === 'novas' ? 'novas entradas' : 'possíveis exclusões';
   const countInfo = document.getElementById('count-info');
   if (countInfo) {
     countInfo.textContent = `Mostrando ${dadosFiltrados.length} relações com ${labelTab}`;
   }
-  
+
   // Renderiza conforme o modelo ativo
   if (state.activeModel === 1) {
     renderModelo1(dadosFiltrados);
@@ -875,4 +904,295 @@ function atualizarDrawer(item) {
     
     drawer.appendChild(details);
   }
+}
+
+// ==========================================
+// RENDERIZADOR DA ABA DE ROLLBACK
+// ==========================================
+function filtrarRollback() {
+  const q = state.filters.search.toLowerCase();
+  return VERSAO_ANTERIOR.itens.filter(item => {
+    if (state.filters.cultura !== 'Todas' && item.cultura !== state.filters.cultura) return false;
+    if (q && !item.praga.toLowerCase().includes(q) && !item.cientifico.toLowerCase().includes(q)) return false;
+    return true;
+  });
+}
+
+function renderRollback() {
+  const dados = filtrarRollback();
+  const totalSelecionados = Object.values(state.rollback.selectedFields).filter(Boolean).length;
+
+  const countInfo = document.getElementById('count-info');
+  if (countInfo) {
+    countInfo.textContent = `Mostrando ${dados.length} relações · ${totalSelecionados} campo(s) selecionado(s) para rollback`;
+  }
+
+  if (state.activeModel === 1) {
+    renderRollbackModelo1(dados);
+  } else {
+    renderRollbackModelo2(dados);
+  }
+}
+
+function renderRollbackModelo1(dados) {
+  const container = document.getElementById('cards-container');
+  if (!container) return;
+  container.innerHTML = '';
+
+  if (dados.length === 0) {
+    container.innerHTML = `<div style="padding:40px; text-align:center; color:var(--text-muted); font-size:14px; background:#fff; border-radius:12px; border:1px solid var(--border-color);">Nenhum item encontrado com os filtros selecionados.</div>`;
+    return;
+  }
+
+  dados.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'card-item';
+
+    const camposAlterados = item.fields.filter(f => f.alterado);
+
+    // Header
+    const header = document.createElement('div');
+    header.className = 'card-header';
+    header.innerHTML = `
+      <div>
+        <div class="card-title">${item.cultura} · ${item.praga}</div>
+        <div class="card-subtitle">${item.cientifico} · Versão anterior: ${VERSAO_ANTERIOR.versao}</div>
+      </div>
+      <div class="card-header-actions">
+        <span class="card-fields-count">${item.fields.length} campos (${camposAlterados.length} alterados)</span>
+      </div>
+    `;
+
+    const actionsDiv = header.querySelector('.card-header-actions');
+
+    const btnSelectAll = document.createElement('button');
+    btnSelectAll.className = 'btn nav-btn';
+    btnSelectAll.style.cssText = 'background:var(--warning-light); color:var(--warning-color); border:1px solid #F0DCC4; padding:6px 12px; font-size:12px; height:32px;';
+    btnSelectAll.textContent = '↩ Reverter tudo';
+    btnSelectAll.addEventListener('click', () => {
+      item.fields.forEach((f, idx) => { if (f.alterado) state.rollback.selectedFields[`${item.id}:${idx}`] = true; });
+      render();
+    });
+
+    const btnDeselectAll = document.createElement('button');
+    btnDeselectAll.className = 'btn nav-btn';
+    btnDeselectAll.style.cssText = 'background:#fff; border:1px solid var(--border-color); color:var(--text-secondary); padding:6px 12px; font-size:12px; height:32px;';
+    btnDeselectAll.textContent = 'Desmarcar tudo';
+    btnDeselectAll.addEventListener('click', () => {
+      item.fields.forEach((_, idx) => { delete state.rollback.selectedFields[`${item.id}:${idx}`]; });
+      render();
+    });
+
+    actionsDiv.appendChild(btnSelectAll);
+    actionsDiv.appendChild(btnDeselectAll);
+    card.appendChild(header);
+
+    // Fields
+    const fieldsList = document.createElement('div');
+    fieldsList.className = 'diff-fields-list';
+
+    item.fields.forEach((field, idx) => {
+      const key = `${item.id}:${idx}`;
+      const isSelected = !!state.rollback.selectedFields[key];
+
+      const row = document.createElement('div');
+      row.className = 'field-diff-row';
+      if (!field.alterado) row.style.opacity = '0.5';
+
+      const badgeClass = field.alterado ? 'badge-warning' : 'badge-secondary';
+      const labelBadge = field.alterado ? 'CAMPO ALTERADO' : 'SEM ALTERAÇÃO';
+
+      row.innerHTML = `
+        <div class="field-diff-header">
+          <span class="field-label">${field.label}</span>
+          <span class="badge ${badgeClass}">${labelBadge}</span>
+        </div>
+        <div class="diff-blocks">
+          <div class="diff-block">
+            <div class="diff-block-title">Valor atual</div>
+            <div class="diff-block-val">${field.atual}</div>
+          </div>
+          <div class="diff-arrow">${field.alterado ? '←' : '='}</div>
+          <div class="diff-block ${field.alterado ? 'suggested' : ''}">
+            <div class="diff-block-title">${field.alterado ? 'Versão anterior' : 'Mesmo valor'}</div>
+            <div class="diff-block-val">${field.anterior}</div>
+          </div>
+        </div>
+      `;
+
+      if (field.alterado) {
+        const diffBlocks = row.querySelector('.diff-blocks');
+        const fieldActions = document.createElement('div');
+        fieldActions.className = 'field-diff-actions';
+
+        const btnRevert = document.createElement('button');
+        btnRevert.className = isSelected ? 'btn-action-circle check active' : 'btn-action-circle check';
+        btnRevert.innerHTML = '↩';
+        btnRevert.title = isSelected ? 'Desmarcar rollback' : 'Reverter este campo';
+        btnRevert.addEventListener('click', () => {
+          state.rollback.selectedFields[key] = !isSelected;
+          render();
+        });
+
+        fieldActions.appendChild(btnRevert);
+        diffBlocks.appendChild(fieldActions);
+      }
+
+      if (isSelected) {
+        const banner = document.createElement('div');
+        banner.className = 'decision-banner accepted';
+        banner.innerHTML = `<span>↩</span> Selecionado para rollback — será revertido ao valor anterior`;
+        row.appendChild(banner);
+      }
+
+      fieldsList.appendChild(row);
+    });
+
+    card.appendChild(fieldsList);
+    container.appendChild(card);
+  });
+}
+
+function renderRollbackModelo2(dados) {
+  const tableHead = document.getElementById('table-head');
+  const tableBody = document.getElementById('table-body');
+  if (!tableHead || !tableBody) return;
+
+  tableHead.innerHTML = `<tr><th>Cultura</th><th>Praga</th><th>Campos</th><th>Selecionados p/ Rollback</th></tr>`;
+  tableBody.innerHTML = '';
+
+  if (dados.length === 0) {
+    tableBody.innerHTML = `<tr><td colspan="4" style="padding:40px; text-align:center; color:var(--text-muted); font-size:13px;">Nenhum item localizado.</td></tr>`;
+    atualizarDrawerRollback(null);
+    return;
+  }
+
+  dados.forEach(item => {
+    const row = document.createElement('tr');
+    row.dataset.id = item.id;
+    if (state.openRowId === item.id) row.className = 'active-row';
+
+    row.addEventListener('click', () => {
+      state.openRowId = state.openRowId === item.id ? null : item.id;
+      document.querySelectorAll('#table-body tr').forEach(r => r.classList.toggle('active-row', r.dataset.id === state.openRowId));
+      atualizarDrawerRollback(state.openRowId ? dados.find(x => x.id === state.openRowId) : null);
+    });
+
+    const alterados = item.fields.filter(f => f.alterado).length;
+    const selecionados = item.fields.filter((_, idx) => state.rollback.selectedFields[`${item.id}:${idx}`]).length;
+
+    row.innerHTML = `
+      <td style="font-weight:600; color:var(--text-primary);">${item.cultura}</td>
+      <td><div class="praga-td-title">${item.praga}</div><div class="praga-td-sub">${item.cientifico}</div></td>
+      <td>${item.fields.length} campos (${alterados} alterados)</td>
+      <td><span style="font-size:12px; color:${selecionados > 0 ? 'var(--warning-color)' : 'var(--text-secondary)'}; font-weight:${selecionados > 0 ? '700' : '400'};">${selecionados > 0 ? selecionados + ' selecionado(s)' : 'Nenhum'}</span></td>
+    `;
+    tableBody.appendChild(row);
+  });
+
+  atualizarDrawerRollback(state.openRowId ? dados.find(x => x.id === state.openRowId) : null);
+}
+
+function atualizarDrawerRollback(item) {
+  const drawer = document.getElementById('detail-drawer');
+  if (!drawer) return;
+
+  if (!item) {
+    drawer.innerHTML = `<div class="drawer-empty-state"><svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg><div>Clique em uma linha à esquerda para ver os campos e selecionar quais reverter.</div></div>`;
+    return;
+  }
+
+  drawer.innerHTML = '';
+
+  const header = document.createElement('div');
+  header.innerHTML = `<div class="drawer-title">${item.cultura} · ${item.praga}</div><div class="drawer-subtitle">${item.cientifico}</div>`;
+  drawer.appendChild(header);
+
+  const massActions = document.createElement('div');
+  massActions.className = 'drawer-field-actions';
+  massActions.style.marginTop = '14px';
+
+  const btnAll = document.createElement('button');
+  btnAll.className = 'drawer-btn-accept';
+  btnAll.style.cssText = 'background:var(--warning-light); color:var(--warning-color); border:1px solid #F0DCC4;';
+  btnAll.innerHTML = '↩ Reverter todos alterados';
+  btnAll.addEventListener('click', () => {
+    item.fields.forEach((f, idx) => { if (f.alterado) state.rollback.selectedFields[`${item.id}:${idx}`] = true; });
+    render();
+  });
+
+  const btnNone = document.createElement('button');
+  btnNone.className = 'drawer-btn-reject';
+  btnNone.style.cssText = 'background:#fff; border:1px solid var(--border-color); color:var(--text-secondary);';
+  btnNone.innerHTML = 'Desmarcar tudo';
+  btnNone.addEventListener('click', () => {
+    item.fields.forEach((_, idx) => { delete state.rollback.selectedFields[`${item.id}:${idx}`]; });
+    render();
+  });
+
+  massActions.appendChild(btnAll);
+  massActions.appendChild(btnNone);
+  drawer.appendChild(massActions);
+
+  const list = document.createElement('div');
+  list.style.marginTop = '18px';
+
+  item.fields.forEach((field, idx) => {
+    const key = `${item.id}:${idx}`;
+    const isSelected = !!state.rollback.selectedFields[key];
+
+    const fieldBlock = document.createElement('div');
+    fieldBlock.className = 'drawer-field-diff';
+    if (!field.alterado) fieldBlock.style.opacity = '0.5';
+
+    const badgeClass = field.alterado ? 'badge-warning' : 'badge-secondary';
+    const labelBadge = field.alterado ? 'ALTERADO' : 'SEM ALTERAÇÃO';
+
+    fieldBlock.innerHTML = `
+      <div class="drawer-field-label" style="display:flex; justify-content:space-between; align-items:center;">
+        <span>${field.label}</span>
+        <span class="badge ${badgeClass}" style="font-size:8px;">${labelBadge}</span>
+      </div>
+      <div class="drawer-block">
+        <div class="drawer-block-title">Valor atual</div>
+        <div class="drawer-block-val">${field.atual}</div>
+      </div>
+    `;
+
+    const prevBlock = document.createElement('div');
+    prevBlock.className = field.alterado ? 'drawer-block suggested' : 'drawer-block';
+    prevBlock.innerHTML = `<div class="drawer-block-title">${field.alterado ? 'Versão anterior' : 'Mesmo valor'}</div><div class="drawer-block-val">${field.anterior}</div>`;
+    fieldBlock.appendChild(prevBlock);
+
+    if (field.alterado) {
+      const actionRow = document.createElement('div');
+      actionRow.className = 'drawer-field-actions';
+
+      const btnToggle = document.createElement('button');
+      btnToggle.className = isSelected ? 'drawer-btn-accept' : 'drawer-btn-reject';
+      btnToggle.style.cssText = isSelected
+        ? 'background:var(--warning-light); color:var(--warning-color); border:1px solid #F0DCC4; font-weight:700;'
+        : 'background:#fff; border:1px solid var(--border-color); color:var(--text-secondary);';
+      btnToggle.innerHTML = isSelected ? '↩ Selecionado para rollback' : 'Selecionar para rollback';
+      btnToggle.addEventListener('click', () => {
+        state.rollback.selectedFields[key] = !isSelected;
+        render();
+      });
+
+      actionRow.appendChild(btnToggle);
+      fieldBlock.appendChild(actionRow);
+    }
+
+    if (isSelected) {
+      const banner = document.createElement('div');
+      banner.className = 'decision-banner accepted';
+      banner.style.cssText = 'background:var(--warning-light); border-color:#F0DCC4; color:var(--warning-color);';
+      banner.innerHTML = `<span>↩</span> Será revertido ao valor anterior`;
+      fieldBlock.appendChild(banner);
+    }
+
+    list.appendChild(fieldBlock);
+  });
+
+  drawer.appendChild(list);
 }

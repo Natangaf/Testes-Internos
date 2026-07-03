@@ -44,3 +44,43 @@ export const EXCLUSOES = [
   { id: 'e5', cultura: 'Milho', praga: 'Falso-cominho', cientifico: 'Fimbristylis miliacea', justificativa: 'Relação não localizada na tabela atual de plantas infestantes da cultura geral.', pagina: '4-7' },
   { id: 'e6', cultura: 'Cana-de-açúcar', praga: 'Arroz vermelho', cientifico: 'Oryza sativa', justificativa: 'Relação não localizada na tabela atual de plantas infestantes da cultura geral.', pagina: '4-7' },
 ];
+
+// Versão anterior salva no banco (única)
+export const VERSAO_ANTERIOR = {
+  versao: 'V9',
+  data: 'out/24',
+  autor: 'IA · revisão automática',
+  descricao: 'Última versão salva antes da auditoria atual',
+  campos_alterados: 18,
+  itens: [
+    { id: 'r1', cultura: 'Algodão', praga: 'Amendoim-bravo', cientifico: 'Euphorbia heterophylla', fields: [
+      { label: 'Modalidade de Aplicação', atual: 'Pulverização tratorizada | Pulverização aérea', anterior: 'Pulverização costal | Pulverização tratorizada', alterado: true },
+      { label: 'Calda Terrestre', atual: '50 a 200 L de calda/ha', anterior: '200 a 400 L de calda/ha', alterado: true },
+      { label: 'Calda Aérea', atual: '15 a 40 L de calda/ha', anterior: 'Não informado', alterado: true },
+      { label: 'Taxa de Aplicação', atual: 'Não informado', anterior: 'Não informado', alterado: false },
+      { label: 'Dosagem Máxima', atual: '2 L/ha', anterior: '2 L/ha', alterado: false },
+    ]},
+    { id: 'r2', cultura: 'Algodão', praga: 'Angiquinho', cientifico: 'Aeschynomene rudis', fields: [
+      { label: 'Dosagem Máxima', atual: '2 L/ha', anterior: '3 L/ha', alterado: true },
+      { label: 'Modalidade de Aplicação', atual: 'Pulverização tratorizada | Pulverização aérea', anterior: 'Pulverização costal | Pulverização tratorizada', alterado: true },
+      { label: 'Intervalo de Segurança', atual: 'Não determinado', anterior: 'SPD: não determinado · Geneticamente modificado: 130 dias', alterado: true },
+      { label: 'Calda Terrestre', atual: '50 a 200 L de calda/ha', anterior: '50 a 200 L de calda/ha', alterado: false },
+    ]},
+    { id: 'r3', cultura: 'Soja', praga: 'Amendoim-bravo', cientifico: 'Euphorbia heterophylla', fields: [
+      { label: 'Calda Terrestre', atual: '50 a 200 L de calda/ha', anterior: '200 a 400 L de calda/ha', alterado: true },
+      { label: 'Intervalo de Segurança', atual: 'Não determinado', anterior: 'SPD: não determinado · Geneticamente modificado: 56 dias', alterado: true },
+      { label: 'Modalidade de Aplicação', atual: 'Pulverização tratorizada | Pulverização aérea', anterior: 'Pulverização tratorizada | Pulverização aérea', alterado: false },
+    ]},
+    { id: 'r4', cultura: 'Milho', praga: 'Carrapicho-de-carneiro', cientifico: 'Acanthospermum hispidum', fields: [
+      { label: 'Temperatura do Ar', atual: 'Inferior a 25 °C', anterior: 'Inferior a 30 °C', alterado: true },
+      { label: 'Umidade do Ar', atual: 'Superior a 70%', anterior: 'Superior a 50%', alterado: true },
+      { label: 'Modalidade de Aplicação', atual: 'Pulverização tratorizada | Pulverização aérea', anterior: 'Pulverização tratorizada | Pulverização aérea', alterado: false },
+      { label: 'Exceções', atual: 'Sistema de Plantio Direto', anterior: 'Sistema de Plantio Direto', alterado: false },
+    ]},
+    { id: 'r5', cultura: 'Cana-de-açúcar', praga: 'Amendoim-bravo', cientifico: 'Euphorbia heterophylla', fields: [
+      { label: 'Intervalo de Segurança', atual: 'Não determinado (pré-plantio)', anterior: '30 dias', alterado: true },
+      { label: 'Calda Terrestre', atual: 'Bentley: 80 a 120 L/ha · Tratorizada: 200 a 400 L/ha · Costal: 100 a 200 L/ha', anterior: 'Bentley: 80 a 120 L/ha · Tratorizada: 200 a 400 L/ha · Costal: 100 a 200 L/ha', alterado: false },
+    ]},
+  ]
+};
+

@@ -1,0 +1,387 @@
+/* === ROLLBACK VIEW — Retornar à Versão Anterior === */
+
+.rollback-view {
+  background-color: var(--bg-surface-alt);
+  padding: 0;
+}
+
+/* Banner de Seleção de Versão */
+.rollback-version-banner {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 36px;
+  background-color: var(--bg-surface);
+  border-bottom: 1px solid var(--border-color);
+  flex-wrap: wrap;
+}
+
+.rollback-version-banner label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  white-space: nowrap;
+}
+
+.version-select-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 280px;
+}
+
+.version-select {
+  padding: 10px 16px;
+  border-radius: var(--radius-md);
+  border: 2px solid var(--border-color);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  background: var(--bg-surface);
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  flex: 1;
+}
+
+.version-select:focus {
+  border-color: var(--warning-color);
+}
+
+.version-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.version-meta-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--warning-light);
+  color: var(--warning-color);
+  border: 1px solid #F0DCC4;
+}
+
+/* Alert de Rollback */
+.rollback-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin: 20px 36px;
+  padding: 16px 20px;
+  background: #FFF8E6;
+  border: 1px solid #F0DCC4;
+  border-radius: var(--radius-lg);
+  border-left: 4px solid var(--warning-color);
+}
+
+.rollback-alert-icon {
+  font-size: 20px;
+  line-height: 1;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.rollback-alert-text {
+  flex: 1;
+}
+
+.rollback-alert-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--warning-color);
+  margin-bottom: 4px;
+}
+
+.rollback-alert-desc {
+  font-size: 13px;
+  color: #8A5A2E;
+  line-height: 1.5;
+}
+
+/* Tabela de Resumo da Versão */
+.rollback-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin: 0 36px 20px;
+}
+
+.rollback-summary-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rollback-summary-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.rollback-summary-value {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* Lista de Itens do Rollback */
+.rollback-items-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 36px 12px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.rollback-items-list {
+  padding: 0 36px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Card de Item de Rollback */
+.rollback-item-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.rollback-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background: var(--bg-surface-alt);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.rollback-item-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.rollback-item-subtitle {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 2px;
+}
+
+.rollback-item-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--warning-light);
+  color: var(--warning-color);
+  border: 1px solid #F0DCC4;
+  white-space: nowrap;
+}
+
+/* Linhas de Comparação do Rollback */
+.rollback-field-list {
+  padding: 4px 20px 16px;
+}
+
+.rollback-field-row {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px dashed var(--border-color);
+}
+
+.rollback-field-row:last-child {
+  border-bottom: none;
+}
+
+.rollback-field-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: .02em;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.rollback-field-val-box {
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  font-size: 13px;
+  line-height: 1.4;
+  width: 100%;
+}
+
+.rollback-field-val-box.current {
+  background: #E9F5EC;
+  color: #134E39;
+  border: 1px solid #C7E8D3;
+  font-weight: 600;
+}
+
+.rollback-field-val-box.previous {
+  background: var(--warning-light);
+  color: #8A5A2E;
+  border: 1px solid #F0DCC4;
+}
+
+.rollback-field-val-label {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.rollback-field-val-label.current { color: #134E39; }
+.rollback-field-val-label.previous { color: var(--warning-color); }
+
+.rollback-arrow {
+  font-size: 20px;
+  color: var(--text-muted);
+  text-align: center;
+  font-weight: bold;
+}
+
+/* Barra de Confirmação de Rollback */
+.rollback-confirm-bar {
+  position: sticky;
+  bottom: 0;
+  background: var(--bg-surface);
+  border-top: 1px solid var(--border-color);
+  padding: 16px 36px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 -4px 16px rgba(0,0,0,0.06);
+  z-index: 50;
+}
+
+.rollback-confirm-text {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.rollback-confirm-sub {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.rollback-confirm-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.btn-rollback-cancel {
+  padding: 10px 20px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-rollback-cancel:hover {
+  background: var(--border-light);
+}
+
+.btn-rollback-confirm {
+  padding: 10px 24px;
+  border-radius: var(--radius-md);
+  border: none;
+  background: var(--warning-color);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-rollback-confirm:hover {
+  background: #b86f39;
+  box-shadow: 0 4px 12px rgba(198, 123, 65, 0.3);
+}
+
+/* Estado de Sucesso do Rollback */
+.rollback-success-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 36px;
+  text-align: center;
+  gap: 12px;
+}
+
+.rollback-success-icon {
+  font-size: 48px;
+  margin-bottom: 8px;
+}
+
+.rollback-success-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.rollback-success-desc {
+  font-size: 14px;
+  color: var(--text-secondary);
+  max-width: 460px;
+  line-height: 1.6;
+}
+
+/* Estado Vazio (nenhuma versão selecionada) */
+.rollback-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 36px;
+  text-align: center;
+  color: var(--text-muted);
+  gap: 12px;
+}
+
+.rollback-empty-icon {
+  font-size: 40px;
+  opacity: 0.5;
+}
+
+.rollback-empty-text {
+  font-size: 14px;
+  max-width: 360px;
+  line-height: 1.6;
+}

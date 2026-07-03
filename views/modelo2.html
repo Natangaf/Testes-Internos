@@ -9,10 +9,13 @@
   <button class="tab-btn" id="tab-exclusoes" data-tab="exclusoes">
     Possíveis exclusões <span class="tab-badge danger" id="badge-exclusoes">53</span>
   </button>
+  <button class="tab-btn" id="tab-rollback" data-tab="rollback">
+    ↩ Retornar à versão anterior
+  </button>
 </div>
 
-<!-- Barra de Filtros -->
-<div class="filters-strip">
+<!-- Barra de Filtros (oculta no rollback) -->
+<div class="filters-strip" id="filters-bar">
   <select class="filter-select" id="filter-cultura">
     <option value="Todas">Todas as culturas</option>
     <option value="Algodão">Algodão</option>
@@ -31,7 +34,7 @@
 </div>
 
 <!-- Container Flex: Tabela à esquerda, Gaveta à direita -->
-<div class="modelo2-view">
+<div class="modelo2-view" id="table-view">
   <!-- Lado Esquerdo: Tabela -->
   <div class="table-side">
     <div class="table-summary-info" id="count-info">
@@ -58,4 +61,9 @@
       <div>Clique em uma linha à esquerda para ver o comparativo completo entre o valor atual e o sugerido pela IA.</div>
     </div>
   </div>
+</div>
+
+<!-- Container da Aba de Rollback -->
+<div class="rollback-view" id="rollback-view" style="display:none;">
+  <!-- Conteúdo injetado dinamicamente pelo app.js -->
 </div>

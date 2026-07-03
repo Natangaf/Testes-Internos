@@ -9,10 +9,13 @@
   <button class="tab-btn" id="tab-exclusoes" data-tab="exclusoes">
     Possíveis exclusões <span class="tab-badge danger" id="badge-exclusoes">53</span>
   </button>
+  <button class="tab-btn" id="tab-rollback" data-tab="rollback">
+    ↩ Retornar à versão anterior
+  </button>
 </div>
 
-<!-- Barra de Filtros -->
-<div class="filters-strip">
+<!-- Barra de Filtros (oculta no rollback) -->
+<div class="filters-strip" id="filters-bar">
   <select class="filter-select" id="filter-cultura">
     <option value="Todas">Todas as culturas</option>
     <option value="Algodão">Algodão</option>
@@ -31,7 +34,7 @@
 </div>
 
 <!-- Container do Conteúdo de Cards -->
-<div class="modelo1-view">
+<div class="modelo1-view" id="cards-view">
   <div class="view-header-summary" id="count-info">
     Mostrando 0 de 0 relações com alterações sugeridas
   </div>
@@ -39,4 +42,9 @@
   <div class="card-list" id="cards-container">
     <!-- Os cards serão injetados dinamicamente via JS -->
   </div>
+</div>
+
+<!-- Container da Aba de Rollback -->
+<div class="rollback-view" id="rollback-view" style="display:none;">
+  <!-- Conteúdo injetado dinamicamente pelo app.js -->
 </div>
